@@ -1,52 +1,37 @@
 <?php
 
 class produk {
-    // membuat properti dengan modifire public
-    public $judul = "judul", 
-            $penulis = "penulis",
-            $penerbit = "penerbit",
-            $harga = 0;
+    public $judul, 
+            $penulis,
+            $penerbit,
+            $harga;
     
-    // memebuat menthod dengan modifire public
-    public function hello() {
-        return "nani kore"."<br>";
+    // method construct dijalankan setiap pemanggilan objek
+    // jadi tidak perlu untuk mendefinisikan property di objek lagi
+    // sebelumnya: produk1->judul = "naruto";
+    // memeberikan nilai default pada property
+    public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0) {
+        $this->judul = $judul;
+        $this->penulis = $penulis; 
+        $this->penerbit = $penerbit; 
+        $this->harga = $harga;
     }
 
-    // menggunakan $this-> untuk mengubah scope dari properti
+    // berfungsi untuk mengembalikan nilai dari value di objek yang menimpa property
     public function label() {
-        return $this->judul;
+        return "$this->judul,
+        $this->penulis, 
+        $this->penerbit, 
+        $this->harga";
     }
 }
 
-// memanggil properti dan menimpanya dengan value yang baru
-$produk1 = new produk();
-$produk1->judul = "disenchanted";
-// var_dump($produk1);
+$produk1 = new produk("naruto", "Fujimoto", "jump", 30000);
+$produk2 = new produk("metal gear", "kojima", "konami", 23000);
+$produk3 = new produk("tales");
 
-// dapat membuat properti yang tidak ada saat modifire public
-$produk2 = new produk();
-$produk2->judul = "miside";
-// $produk2->rating = "10/10";
-// var_dump($produk2);
-
-$produk3 = new produk();
-$produk3->judul = "naruto";
-$produk3->penulis = "fujimoto";
-$produk3->penerbit = "jump";
-$produk3->harga = 30000;
-
-$produk4 = new produk();
-$produk4->judul = "metal gear";
-$produk4->penulis = "kojima";
-$produk4->penerbit = "konami";
-$produk4->harga = 230000;
-
-echo "komik: $produk3->judul";
-
+echo "komik: " . $produk1->label();
 echo "<br>";
-
-// untuk memanggil method harus membuat objek terlebih dahulu
-echo $produk3->hello();
-echo $produk3->label();
+echo "game : " . $produk2->label();
 echo "<br>";
-echo $produk4->label();
+echo "game : " . $produk3->label();
