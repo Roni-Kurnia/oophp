@@ -1,17 +1,17 @@
 <?php
 
-/* 
-getter & setter:
-    1. setter digunakan untuk memperbarui value pada data
-    2. getter digunakan untuk mengambil data yang telah diperbarui oeleh setter
-*/
+// interface membuat template dan jika mau digunakan method yang ada di dalamnya harus dipakai semua
 
-class produk {
-    private $judul, 
+interface detailProduk {
+    public function getInfoP();
+}
+
+abstract class produk {
+    protected $judul, 
             $penulis,
             $penerbit,
-            $harga;
-    protected $diskon;
+            $harga,
+            $diskon;
 
     public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0) {
         $this->judul = $judul;
@@ -70,18 +70,15 @@ class produk {
         
     }
 
-    public function getInfo() {
-        $str = "{$this->judul} | {$this->penulis}, {$this->penerbit} (Rp.{$this->harga})";
-        return $str;
-    }
+    abstract public function getInfoP();
 }
 
 // komik
-class komik extends produk {
+class komik extends produk implements detailProduk{
     public $jmlHalaman;
 
     public function getInfo() {
-        $str = "Komik: ". parent::getInfo() ." - {$this->jmlHalaman} Halaman.";
+        $str = "Komik: ". $this->getInfoP() ." - {$this->jmlHalaman} Halaman.";
         return $str;
     }
 
@@ -90,14 +87,19 @@ class komik extends produk {
 
         $this->jmlHalaman = $jmlHalaman;
     }
+
+    public function getInfoP() {
+        $str = "{$this->judul} | {$this->penulis}, {$this->penerbit} (Rp.{$this->harga})";
+        return $str;
+    }
 }
 
 // game
-class game extends produk {
+class game extends produk implements detailProduk{
     public $play;
 
     public function getInfo() {
-        $str = "Game: ". parent::getInfo() ." - {$this->play} Jam.";
+        $str = "Game: ". $this->getInfoP() ." - {$this->play} Jam.";
         return $str;
     }
 
@@ -106,20 +108,35 @@ class game extends produk {
 
         $this->play = $play;
     }
+
+    public function getInfoP() {
+        $str = "{$this->judul} | {$this->penulis}, {$this->penerbit} (Rp.{$this->harga})";
+        return $str;
+    }
+}
+
+class getInfoLengkap {
+    public $daftarProduk = array();
+
+    public function setDProduk(produk $produk) {
+        $this->daftarProduk[] = $produk;
+    }
+
+    public function cetak() {
+        $str = "Daftar Produk: <br>";
+
+        foreach ($this->daftarProduk as $p) {
+            $str .= "- {$p->getInfo()} <br>";
+        }
+
+        return $str;
+    }
 }
 
 $produk1 = new komik("Naruto", "Masashi kishimoto", "Shonen Jump", 30000, 100);
 $produk2 = new game("Metalgear", "Hideo Kojima", "konami", 230000, 50);
 
-echo $produk1->getInfo($produk1);
-echo "<br>";
-echo $produk2->getInfo($produk2);
-echo "<hr>";
-$produk1->setDiskon(50);
-echo $produk1->diskonHarga();
-echo "<br>";
-$produk2->setDiskon(50);
-echo $produk2->diskonHarga();
-echo "<hr>";
-$produk1->setJudul("judul lain");
-echo $produk1->getJudul();
+$cetakinfopd = new getInfoLengkap();
+$cetakinfopd->setDProduk($produk1);
+$cetakinfopd->setDProduk($produk2);
+echo $cetakinfopd->cetak();
